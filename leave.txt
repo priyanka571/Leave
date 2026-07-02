@@ -1,0 +1,720 @@
+Complete Project Structure
+employee-leave-management/
+
+app/
+components/
+hooks/
+lib/
+models/
+controllers/
+routes/
+middleware/
+services/
+utils/
+public/
+styles/
+
+A more scalable structure inside a Next.js app could look like:
+
+src/
+
+app/
+    login/
+    register/
+    dashboard/
+    employees/
+    leaves/
+    holidays/
+    departments/
+    profile/
+    reports/
+
+components/
+    Navbar
+    Sidebar
+    EmployeeCard
+    LeaveCard
+    LeaveForm
+    DataTable
+    Calendar
+    Charts
+    Pagination
+
+controllers/
+
+middleware/
+
+models/
+
+routes/
+
+services/
+
+utils/
+
+types/
+
+lib/
+
+constants/
+User Roles
+1. Super Admin
+
+2. HR
+
+3. Manager
+
+4. Employee
+
+Each role has different permissions.
+
+Complete Database Design
+Employee Model
+Employee
+
+_id
+
+employeeId
+
+firstName
+
+lastName
+
+email
+
+phone
+
+password
+
+department
+
+designation
+
+joiningDate
+
+manager
+
+salary
+
+gender
+
+dob
+
+address
+
+city
+
+state
+
+country
+
+zipCode
+
+profileImage
+
+role
+
+status
+
+remainingLeaves
+
+createdAt
+
+updatedAt
+
+Example
+
+{
+ employeeId:"EMP001",
+
+ firstName:"John",
+
+ lastName:"Doe",
+
+ email:"john@gmail.com",
+
+ password:"hashedpassword",
+
+ department:ObjectId,
+
+ designation:ObjectId,
+
+ manager:ObjectId,
+
+ role:"employee",
+
+ remainingLeaves:{
+     casual:10,
+     sick:8,
+     earned:20
+ }
+}
+Department Model
+Department
+
+_id
+
+departmentName
+
+departmentCode
+
+description
+
+head
+
+status
+Designation Model
+Designation
+
+_id
+
+title
+
+salaryGrade
+
+description
+Leave Types Model
+LeaveType
+
+_id
+
+name
+
+description
+
+maxDays
+
+carryForward
+
+isPaid
+
+Example
+
+Casual
+
+Sick
+
+Earned
+
+Maternity
+
+Paternity
+
+Bereavement
+Leave Request Model
+
+This is the heart of the application.
+
+Leave
+
+_id
+
+employee
+
+leaveType
+
+fromDate
+
+toDate
+
+days
+
+reason
+
+status
+
+approvedBy
+
+approvedDate
+
+rejectedReason
+
+attachment
+
+comments
+
+createdAt
+
+Status
+
+Pending
+
+Approved
+
+Rejected
+
+Cancelled
+Holiday Model
+Holiday
+
+_id
+
+title
+
+date
+
+description
+
+isOptional
+Attendance Model (Optional)
+Attendance
+
+employee
+
+date
+
+checkIn
+
+checkOut
+
+workingHours
+
+status
+Notification Model
+Notification
+
+receiver
+
+sender
+
+title
+
+message
+
+isRead
+
+type
+
+createdAt
+Audit Log Model
+Audit
+
+user
+
+action
+
+entity
+
+entityId
+
+ip
+
+timestamp
+Relationships
+Employee
+
+|
+|--- Department
+
+|
+|--- Designation
+
+|
+|--- Manager(Employee)
+
+|
+|--- Leave[]
+
+|
+|--- Notification[]
+Complete API Design
+Authentication
+POST
+
+/api/auth/register
+
+POST
+
+/api/auth/login
+
+POST
+
+/api/auth/logout
+
+GET
+
+/api/auth/profile
+
+PUT
+
+/api/auth/change-password
+
+POST
+
+/api/auth/forgot-password
+
+POST
+
+/api/auth/reset-password
+Employee APIs
+GET
+
+/api/employees
+
+GET
+
+/api/employees/:id
+
+POST
+
+/api/employees
+
+PUT
+
+/api/employees/:id
+
+DELETE
+
+/api/employees/:id
+Department APIs
+GET
+
+/api/departments
+
+POST
+
+/api/departments
+
+PUT
+
+/api/departments/:id
+
+DELETE
+
+/api/departments/:id
+Leave APIs
+GET
+
+/api/leaves
+
+GET
+
+/api/leaves/:id
+
+POST
+
+/api/leaves
+
+PUT
+
+/api/leaves/:id
+
+DELETE
+
+/api/leaves/:id
+
+Manager
+
+PUT
+
+/api/leaves/approve/:id
+
+PUT
+
+/api/leaves/reject/:id
+
+Employee
+
+GET
+
+/api/leaves/my-leaves
+
+Holiday
+
+GET
+
+/api/holidays
+
+POST
+
+/api/holidays
+
+PUT
+
+/api/holidays/:id
+
+DELETE
+
+/api/holidays/:id
+
+Notifications
+
+GET
+
+/api/notifications
+
+PUT
+
+/api/notifications/read/:id
+
+Reports
+
+GET
+
+/api/reports/monthly
+
+GET
+
+/api/reports/yearly
+
+GET
+
+/api/reports/department
+
+GET
+
+/api/reports/employee
+Controllers
+AuthController
+register()
+
+login()
+
+logout()
+
+refreshToken()
+
+forgotPassword()
+
+resetPassword()
+
+changePassword()
+
+getProfile()
+EmployeeController
+createEmployee()
+
+updateEmployee()
+
+deleteEmployee()
+
+getEmployee()
+
+getEmployees()
+
+searchEmployee()
+
+uploadProfile()
+DepartmentController
+createDepartment()
+
+updateDepartment()
+
+deleteDepartment()
+
+getDepartments()
+
+getDepartment()
+LeaveController
+applyLeave()
+
+updateLeave()
+
+cancelLeave()
+
+deleteLeave()
+
+approveLeave()
+
+rejectLeave()
+
+getLeave()
+
+getLeaves()
+
+getMyLeaves()
+
+leaveHistory()
+
+calculateLeaveBalance()
+HolidayController
+createHoliday()
+
+updateHoliday()
+
+deleteHoliday()
+
+getHoliday()
+
+getHolidays()
+NotificationController
+createNotification()
+
+getNotifications()
+
+markAsRead()
+
+deleteNotification()
+ReportController
+employeeReport()
+
+monthlyReport()
+
+yearlyReport()
+
+departmentReport()
+
+leaveSummary()
+Middleware
+AuthMiddleware
+
+RoleMiddleware
+
+ErrorMiddleware
+
+LoggerMiddleware
+
+ValidationMiddleware
+
+UploadMiddleware
+Validation
+
+Employee
+
+Name Required
+
+Email Required
+
+Password Length
+
+Phone
+
+Department Required
+
+Leave
+
+Start Date
+
+End Date
+
+Reason
+
+Leave Type
+Business Logic
+
+Employee submits leave.
+
+↓
+
+Status = Pending
+
+↓
+
+Manager gets notification
+
+↓
+
+Manager approves
+
+↓
+
+Leave balance deducted
+
+↓
+
+Employee notified
+
+↓
+
+Report updated
+
+Frontend Pages
+Login
+
+Register
+
+Dashboard
+
+Profile
+
+Employee List
+
+Employee Details
+
+Department
+
+Designation
+
+Leave List
+
+Apply Leave
+
+Leave History
+
+Holiday Calendar
+
+Notifications
+
+Reports
+
+Settings
+Dashboard Widgets
+
+Employee
+
+Remaining Leaves
+
+Pending Leaves
+
+Approved Leaves
+
+Upcoming Holidays
+
+HR
+
+Total Employees
+
+Pending Leaves
+
+Department Count
+
+Monthly Leave Graph
+
+Attendance Graph
+
+Manager
+
+Team Members
+
+Pending Approvals
+
+Department Leave Summary
+Charts
+
+Use libraries like Recharts or Chart.js to display:
+
+Monthly leave trends
+Department-wise leave distribution
+Leave type breakdown (pie chart)
+Employee leave usage
+Yearly statistics
+Security
+Hash passwords with bcrypt
+Store authentication in secure HTTP-only cookies or signed JWTs
+Implement role-based access control (RBAC)
+Validate all request payloads
+Sanitize inputs to reduce injection risks
+Protect against CSRF (if using cookies)
+Add rate limiting on authentication endpoints
+Record sensitive actions in audit logs
+Future Enhancements
+Email notifications for leave approvals/rejections
+Real-time notifications using WebSockets
+Calendar integration (Google/Outlook)
+File uploads for medical certificates
+Public holiday synchronization
+Multi-company (multi-tenant) support
+Mobile-responsive Progressive Web App (PWA)
+Payroll integration
+Attendance and timesheet management
+AI-based leave trend insights
+Suggested Development Order
+Set up the project and authentication.
+Build the Employee, Department, and Designation modules.
+Implement leave types and leave requests.
+Add the leave approval workflow for managers.
+Create dashboards and reports.
+Add notifications, audit logging, and file uploads.
+Polish the UI, add testing, and deploy.
+
+This design follows a layered architecture (Routes → Controllers → Services → Models → Database) with clear separation of concerns, making the application easier to maintain and scale as new features are added.
