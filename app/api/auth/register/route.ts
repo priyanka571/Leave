@@ -11,14 +11,45 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const {
-      name,
+       employeeId,
+      firstName,
+      lastName,
       email,
+      phone,
+      department,
       password,
+      designation,
+      joiningDate,
+      manager,
+      salary,
+      gender,
+      dob,
+      address,
+      profileImage,
       role,
+      status,
+      remainingLeaves,
     } = body;
 
 
-    if (!name || !email || !password || !role) {
+    if (
+       !employeeId ||
+      !firstName ||
+      !lastName ||
+      !email ||
+      !phone ||
+      !department ||
+      !password ||
+      !designation ||
+      !joiningDate ||
+      !manager ||
+      !salary ||
+      !gender ||
+      !dob ||
+      !address ||
+      !status ||
+      remainingLeaves === undefined
+    ) {
       return NextResponse.json(
         {
           message: "All fields are required",
@@ -31,7 +62,11 @@ export async function POST(req: NextRequest) {
 
 
     const existingUser = await User.findOne({
-      email,
+     $or:[
+        {email},
+        // {employeeId},
+        // {phone}
+      ]
     });
 
 
@@ -48,16 +83,31 @@ export async function POST(req: NextRequest) {
 
 
     const user = await User.create({
-      name,
+      employeeId,
+      firstName,
+      lastName,
+      //  email: email.toLowerCase().trim(),
       email,
+      phone,
+      department,
       password,
-      role,
+      designation,
+      joiningDate,
+      manager,
+      salary,
+      gender,
+      dob,
+      address,
+      profileImage,
+      role: role || "employee",
+       status,
+      remainingLeaves
     });
 
 
-    // password response me nahi bhejna
+    
     const createdUser = await User.findById(user._id)
-      .select("-password");
+      .select("-password -refreshToken");
 
 
     return NextResponse.json(

@@ -3,58 +3,116 @@ import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 const userSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
+    {
+        employeeId: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        firstName: {
+            type: String,
+            required: true
+        },
+        lastName: {
+            type: String,
+            required: true
+        },
 
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-       lowercase: true,
-        trim: true,
-    },
+        phone: {
+            type: String,
+            required: true,
+            unique: true
+        },
+        department: {
+            type: String,
+            required: true
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        designation: {
+            type: String,
+            required: true
+        },
+        joiningDate: {
+            type: Date,
+            required: true
+        },
+        manager: {
+            type: String,
+            required: true
+        },
+        salary: {
+            type: Number,
+            required: true
+        },
+        gender: {
+            type: String,
+            required: true
+        },
+        dob: {
+            type: Date,
+            required: true
+        },
+        address: {
+            type: String,
+            required: true
+        },
+        profileImage: {
+            type: String,
+            required: false
+        },
+        role: {
+            type: String,
+            enum: ['admin', 'employee'],
+            default: "employee",
+        },
+        status: {
+            type: String,
+            enum: ['active', 'inactive'],
+            required: true
+        },
+        remainingLeaves: {
+            type: Number,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true,
+            unique: true,
+            lowercase: true,
+            trim: true,
 
-    password: {
-      type: String,
-      required: true,
+        },
+        resetPasswordToken: {
+            type: String,
+            default: undefined,
+        },
+        resetPasswordExpire: {
+            type: Date
+        },
+        refreshToken: {
+            type: String,
+            default: undefined,
+        }
     },
-
-    role: {
-      type: String,
-      enum: ["admin", "hr", "manager", "employee"],
-      default: "employee",
-    }, 
-    resetPasswordToken:{
-        type:String,
-         default: undefined,
-    },
-    resetPasswordExpire:{
-        type:Date
-    },
-    refreshToken:{
-        type:String,
-         default: undefined,
-    }
-  },
-  { timestamps: true }
+    { timestamps: true }
 );
 
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return;
 
-   try {
-    this.password = await bcrypt.hash(this.password, 10);
-    
-  } catch (err) {
-    console.error(err);
-  }
+    try {
+        this.password = await bcrypt.hash(this.password, 10);
+
+    } catch (err) {
+        console.error(err);
+    }
 });
 
 
-userSchema.methods.isPasswordCorrect = async function(password: string){
+userSchema.methods.isPasswordCorrect = async function (password: string) {
     return await bcrypt.compare(password, this.password)
 }
 

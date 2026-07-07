@@ -1,7 +1,7 @@
 // src/app/api/auth/login/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import {connectDB} from "@/utils/db";
+import { connectDB } from "@/utils/db";
 import User from "@/models/User.model";
 import { generateAccessAndRefreshTokens } from "@/utils/auth";
 
@@ -9,9 +9,10 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
 
-    const { email, username, password } = await req.json();
+    const { email, firstName, password } = await req.json();
+   
 
-    if (!(email || username)) {
+    if (!(email || firstName)) {
       return NextResponse.json(
         { message: "Email or username required" },
         { status: 400 }
@@ -20,8 +21,9 @@ export async function POST(req: NextRequest) {
 
     const user = await User.findOne({
       $or: [
-        { email },
-        { username }
+        // { email: email?.toLowerCase().trim() },
+        {email},
+        { firstName }
       ],
     });
 
@@ -51,12 +53,15 @@ export async function POST(req: NextRequest) {
 
     const loggedInUser =
       await User.findById(user._id)
-      .select("-password -refreshToken");
+        .select("-password -refreshToken");
 
 
     const response = NextResponse.json(
       {
-        data: loggedInUser,
+        // data: loggedInUser,
+        success: true,
+        user: loggedInUser,
+        redirectUrl: `/employee/${user._id}`,
         message: "Login successful",
       },
       {
