@@ -52,7 +52,7 @@ export const getUserFromRequest = async () => {
 
 
 
-export const getUserId = async () => {
+export const verifyToken = async () => {
   const token = (await cookies()).get("accessToken")?.value;
 
   if (!token) return null;
@@ -62,5 +62,5 @@ export const getUserId = async () => {
     process.env.ACCESS_TOKEN_SECRET!
   );
 
-  return decoded._id;
+  return decoded;
 };

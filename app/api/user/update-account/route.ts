@@ -1,27 +1,44 @@
-import { NextRequest, NextResponse } from "next/server";
+// app/api/user/update/route.js
+
+import { NextResponse, NextRequest } from "next/server";
+import {connectDB} from "@/utils/db";
 import User from "@/models/User.model";
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
+import { verifyToken } from "@/utils/auth";
+import { uploadToCloudinary } from "@/utils/cloudinary";
 
-export async function PATCH(req: NextRequest) {
-  const { fullName, email } = await req.json();
+export async function PATCH(request:NextRequest) {
+  await connectDB();
 
-  const token = (await cookies()).get("accessToken")?.value;
+  try {
+    const { fullName, email } = await request.json();
 
-  if (!token) {
-    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    if (!fullName || !email) {
+      return NextResponse.json(
+        { message: "All fields are required" },
+        { status: 400 }
+      );
+    }
+
+    const authUser = await verifyToken();
+
+    const user = await User.findByIdAndUpdate(
+      authUser._id,
+      {
+        fullName,
+        email,
+      },
+      {
+        new: true,
+      }
+    ).select("-password");
+
+    return NextResponse.json(user);
+  } catch (err) {
+    return NextResponse.json(
+      { message: (err as Error).message },
+      { status: 500 }
+    );
   }
-
-  const decoded: any = jwt.verify(
-    token,
-    process.env.ACCESS_TOKEN_SECRET!
-  );
-
-  const user = await User.findByIdAndUpdate(
-    decoded._id,
-    { fullName, email },
-    { new: true }
-  ).select("-password");
-
-  return NextResponse.json({ user });
 }
+
+
