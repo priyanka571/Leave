@@ -10,7 +10,7 @@ export async function GET() {
     return NextResponse.json({ user: null }, { status: 401 });
   }
 
-  const decoded: any = jwt.verify(
+  try{const decoded: any = jwt.verify(
     token,
     process.env.ACCESS_TOKEN_SECRET!
   );
@@ -20,4 +20,7 @@ export async function GET() {
   );
 
   return NextResponse.json({ user });
+  }catch(error){
+    return NextResponse.json({ user: null }, { status: 401 });
+  }
 }
