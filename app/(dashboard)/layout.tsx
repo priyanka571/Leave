@@ -12,12 +12,14 @@ export default function RootLayout({
   return (
     
      
-        <div className="h-screen flex bg-gray-50 overflow-hidden">
+        <div className="h-screen flex bg-gray-50">
           <Sidebar />
-          <div className="flex-1 flex flex-col min-w-0">
+          <div className="flex-1 flex flex-col">
+          
             <Topbar />
 
-            <main className="flex-1">
+           
+             <main className="flex-1 overflow-y-auto">
               {children}
             </main>
           </div>

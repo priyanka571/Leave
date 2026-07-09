@@ -3,6 +3,42 @@ import { connectDB } from "@/utils/db";
 import { getUserFromRequest } from "@/utils/auth";
 import Leave from "@/models/leaveRequest.model";
 
+//for checkingpurpose by me
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+
+  await connectDB();
+
+  const user = await getUserFromRequest();
+
+  if (!user) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  const leave = await Leave.findById(id)
+    .populate("employee", "firstName lastName email department designation")
+    .populate("approvedBy", "firstName lastName");
+
+  if (!leave) {
+    return NextResponse.json(
+      { message: "Leave not found" },
+      { status: 404 }
+    );
+  }
+
+  return NextResponse.json({
+    success: true,
+    leave,
+  });
+}
+
+
+// end here
+
+
 
 // ============================
 // PATCH - Approve / Reject Leave

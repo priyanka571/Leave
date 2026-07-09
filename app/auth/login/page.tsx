@@ -43,7 +43,17 @@ export default function LoginPage() {
 
 
       // login successful
-      router.push("/");
+      const user = res.data.user;
+
+      if (user.role === "employee") {
+
+        router.push(`/employee/${user._id}`);
+
+      } else if (user.role === "admin") {
+
+        router.push("/leave-request");
+
+      }
       router.refresh();
 
 
