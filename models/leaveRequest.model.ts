@@ -54,20 +54,28 @@ const leaveSchema = new Schema(
       ],
       default: "Pending",
     },
-    isHalfDay: {
-    type: Boolean,
-    default: false,
-    },
+    // isHalfDay: {
+    // type: Boolean,
+    // default: false,
+    // },
 
-    halfDayType: {
-    type: String,
-    enum: ["First Half", "Second Half"],
-    default: null,
+    // halfDayType: {
+    // type: String,
+    // enum: ["First Half", "Second Half"],
+    // default: null,
+    // },
+    duration: {
+      type: String,
+      enum: [
+        "Full Day",
+        "Half Day"
+      ],
+      default: "Full Day"
     },
 
     cancelledDate: {
-    type: Date,
-    default: null,
+      type: Date,
+      default: null,
     },
 
     approvedBy: {

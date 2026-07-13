@@ -73,9 +73,63 @@ const userSchema = new mongoose.Schema(
             enum: ['active', 'inactive'],
             required: true
         },
-        remainingLeaves: {
-            type: Number,
-            required: true
+        // remainingLeaves: {
+        //     type: Number,
+        //     required: true
+        // },
+        leaveBalance: {
+
+            paidLeaves: {
+                total: {
+                    type: Number,
+                    default: 15
+                },
+
+                used: {
+                    type: Number,
+                    default: 0
+                },
+
+                remaining: {
+                    type: Number,
+                    default: 15
+                }
+            },
+
+
+            maternityLeave: {
+                total: {
+                    type: Number,
+                    default: 180
+                },
+
+                used: {
+                    type: Number,
+                    default: 0
+                }
+            },
+
+
+            paternityLeave: {
+                total: {
+                    type: Number,
+                    default: 15
+                },
+
+                used: {
+                    type: Number,
+                    default: 0
+                }
+            },
+
+
+            unpaidLeave: {
+                used: {
+                    type: Number,
+                    default: 0
+                }
+            }
+
         },
         email: {
             type: String,

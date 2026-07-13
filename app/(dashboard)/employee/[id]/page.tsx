@@ -347,8 +347,9 @@ export default function EmployeeProfilePage(){
 
           <Info
             icon={<CalendarDays/>}
-            title="Remaining Leaves"
-            value={`${employee?.remainingLeaves} Days`}
+            title="Remaining Paid Leaves"
+            // value={`${employee?.remainingLeaves} Days`}
+             value={`${employee?.leaveBalance?.paidLeaves?.remaining ?? 0} Days`}
           />
 
 

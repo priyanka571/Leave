@@ -3,6 +3,7 @@
 import { useState } from "react";
 import api from "@/utils/axios";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 
 export default function RegisterPage() {
@@ -28,27 +29,125 @@ export default function RegisterPage() {
     address: "",
     role: "employee",
     status: "active",
-    remainingLeaves: ""
+    remainingLeaves: 15
 
   });
 
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [errors, setErrors] = useState({
+    password: "",
+    email: "",
+    phone: "+91",
+  });
+
+  const strongPasswordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
+
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+  const phoneRegex = /^\+91 [6-9]\d{9}$/;
 
 
+
+  // const handleChange = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  // ) => {
+
+  //   setFormData({
+
+  //     ...formData,
+
+  //     [e.target.name]: e.target.value
+
+  //   });
+
+  // };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
 
+    const { name, value } = e.target;
+
+
     setFormData({
-
       ...formData,
-
-      [e.target.name]: e.target.value
-
+      [name]: value
     });
+
+
+    if (name === "password") {
+
+      if (!strongPasswordRegex.test(value)) {
+
+        setErrors((prev) => ({
+          ...prev,
+          password:
+            "Password must contain 8+ characters, uppercase, lowercase, number and special character."
+        }));
+
+      } else {
+
+        setErrors((prev) => ({
+          ...prev,
+          password: ""
+        }));
+
+      }
+
+    }
+
+    if (name === "email") {
+
+      if (!emailRegex.test(value)) {
+
+        setErrors((prev) => ({
+          ...prev,
+          email: "Only Gmail addresses are allowed."
+        }));
+
+      } else {
+
+        setErrors((prev) => ({
+          ...prev,
+          email: ""
+        }));
+
+      }
+
+    }
+
+    if (name === "phone") {
+
+      let onlyNumbers = value.replace(/\D/g, "");
+
+      if (onlyNumbers.startsWith("91")) {
+        onlyNumbers = onlyNumbers.slice(2);
+      }
+
+      onlyNumbers = onlyNumbers.slice(0, 10);
+
+      setFormData({
+        ...formData,
+        phone: "+91 " + onlyNumbers
+      });
+
+
+      if (!phoneRegex.test(formData.phone)) {
+        setError("Please enter a valid phone number.");
+        return;
+      }
+
+
+      return;
+    }
+    setFormData({
+      ...formData,
+      [name]: value
+    });
+
 
   };
 
@@ -60,6 +159,20 @@ export default function RegisterPage() {
   ) => {
 
     e.preventDefault();
+
+    if (!strongPasswordRegex.test(formData.password)) {
+
+      setError(
+        "Please enter a strong password."
+      );
+
+      return;
+
+    }
+    if (!phoneRegex.test(formData.phone)) {
+      setError("Please enter a valid phone number.");
+      return;
+    }
 
 
     try {
@@ -109,226 +222,7 @@ export default function RegisterPage() {
 
 
 
-  // return (
 
-  {/* <div>
-
-<h1>
-Employee Registration
-</h1>
-
-
-{
-error &&
-<p style={{color:"red"}}>
-{error}
-</p>
-}
-
-
-{
-success &&
-<p style={{color:"green"}}>
-{success}
-</p>
-}
-
-
-
-<form onSubmit={handleRegister}>
-
-
-<input
-name="employeeId"
-placeholder="Employee ID"
-onChange={handleChange}
-/>
-
-
-<input
-name="firstName"
-placeholder="First Name"
-onChange={handleChange}
-/>
-
-
-
-<input
-name="lastName"
-placeholder="Last Name"
-onChange={handleChange}
-/>
-
-
-
-<input
-name="email"
-type="email"
-placeholder="Email"
-onChange={handleChange}
-/>
-
-
-
-<input
-name="phone"
-placeholder="Phone"
-onChange={handleChange}
-/>
-
-
-
-<input
-name="department"
-placeholder="Department"
-onChange={handleChange}
-/>
-
-
-
-<input
-name="password"
-type="password"
-placeholder="Password"
-onChange={handleChange}
-/>
-
-
-
-<input
-name="designation"
-placeholder="Designation"
-onChange={handleChange}
-/>
-
-
-
-<label>
-Joining Date
-</label>
-
-<input
-name="joiningDate"
-type="date"
-onChange={handleChange}
-/>
-
-
-
-<input
-name="manager"
-placeholder="Manager Name"
-onChange={handleChange}
-/>
-
-
-
-<input
-name="salary"
-type="number"
-placeholder="Salary"
-onChange={handleChange}
-/>
-
-
-
-<select
-name="gender"
-onChange={handleChange}
->
-
-<option value="">
-Select Gender
-</option>
-
-<option value="Male">
-Male
-</option>
-
-<option value="Female">
-Female
-</option>
-
-</select>
-
-
-
-<label>
-Date of Birth
-</label>
-
-<input
-name="dob"
-type="date"
-onChange={handleChange}
-/>
-
-
-
-<input
-name="address"
-placeholder="Address"
-onChange={handleChange}
-/>
-
-
-
-<select
-name="role"
-value={formData.role}
-onChange={handleChange}
->
-
-<option value="employee">
-Employee
-</option>
-
-
-<option value="admin">
-Admin
-</option>
-
-</select>
-
-
-
-<input
-name="remainingLeaves"
-type="number"
-placeholder="Remaining Leaves"
-onChange={handleChange}
-/>
-
-
-
-<select
-name="status"
-value={formData.status}
-onChange={handleChange}
->
-
-<option value="active">
-Active
-</option>
-
-<option value="inactive">
-Inactive
-</option>
-
-
-</select>
-
-
-
-<button type="submit">
-Register
-</button>
-
-
-</form>
-
-
-</div> */}
 
   return (
     <div className="relative z-10 mx-auto w-full max-w-6xl rounded-2xl border border-gray-100 bg-white/80 p-8 shadow-xl backdrop-blur-xl">
@@ -371,7 +265,7 @@ Register
         {
           error &&
           <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
-            {error}
+            {error || errors.password || errors.email || errors.phone}
           </p>
         }
 
@@ -382,229 +276,6 @@ Register
             {success}
           </p>
         }
-
-
-
-
-        {/* <form
-        onSubmit={handleRegister}
-        className="grid grid-cols-1 gap-5 md:grid-cols-2"
-      >
-
-
-        {/* Employee ID }
-        <input
-          name="employeeId"
-          placeholder="Employee ID"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-        <input
-          name="firstName"
-          placeholder="First Name"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-        <input
-          name="lastName"
-          placeholder="Last Name"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-        <input
-          name="phone"
-          placeholder="Phone"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-        <input
-          name="department"
-          placeholder="Department"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-
-        <input
-          name="designation"
-          placeholder="Designation"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-
-        <div>
-          <label className="mb-2 block text-sm text-gray-600">
-            Joining Date
-          </label>
-
-          <input
-            name="joiningDate"
-            type="date"
-            onChange={handleChange}
-            className="inputStyle"
-          />
-        </div>
-
-
-
-        <input
-          name="manager"
-          placeholder="Manager Name"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-
-        <input
-          name="salary"
-          type="number"
-          placeholder="Salary"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-
-        <select
-          name="gender"
-          onChange={handleChange}
-          className="inputStyle"
-        >
-
-          <option value="">
-            Select Gender
-          </option>
-
-          <option value="Male">
-            Male
-          </option>
-
-          <option value="Female">
-            Female
-          </option>
-
-        </select>
-
-
-
-        <div>
-
-          <label className="mb-2 block text-sm text-gray-600">
-            Date of Birth
-          </label>
-
-
-          <input
-            name="dob"
-            type="date"
-            onChange={handleChange}
-            className="inputStyle"
-          />
-
-        </div>
-
-
-
-        <input
-          name="address"
-          placeholder="Address"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-
-        <select
-          name="role"
-          value={formData.role}
-          onChange={handleChange}
-          className="inputStyle"
-        >
-
-          <option value="employee">
-            Employee
-          </option>
-
-          <option value="admin">
-            Admin
-          </option>
-
-        </select>
-
-
-
-        <input
-          name="remainingLeaves"
-          type="number"
-          placeholder="Remaining Leaves"
-          onChange={handleChange}
-          className="inputStyle"
-        />
-
-
-
-        <select
-          name="status"
-          value={formData.status}
-          onChange={handleChange}
-          className="inputStyle"
-        >
-
-          <option value="active">
-            Active
-          </option>
-
-          <option value="inactive">
-            Inactive
-          </option>
-
-        </select>
-
-
-
-        {/* Button *
-        <button
-          type="submit"
-          className="md:col-span-2 rounded-xl bg-indigo-600 py-3 font-medium text-white transition hover:bg-indigo-700 hover:scale-[1.01]"
-        >
-          Register
-        </button>
-
-
-      </form> */}
-
-
         <form
           onSubmit={handleRegister}
           className="space-y-5"
@@ -640,6 +311,9 @@ Register
                 onChange={handleChange}
                 className="flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5 text-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
               />
+
+
+
             </div>
 
 
@@ -680,13 +354,18 @@ Register
                 Phone
               </label>
 
+
+
               <input
                 name="phone"
                 placeholder="Phone"
                 onChange={handleChange}
+                value={formData.phone}
+                maxLength={14}
                 className="inputStyle flex-1"
               />
             </div>
+
 
 
 
@@ -768,7 +447,7 @@ Register
                 type="number"
                 placeholder="Salary"
                 onChange={handleChange}
-                className="inputStyle flex-1"
+                className="inputStyle flex-1 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               />
 
             </div>
@@ -880,7 +559,7 @@ Register
               <input
                 name="remainingLeaves"
                 type="number"
-                placeholder="Remaining Leaves"
+                value={formData.remainingLeaves}
                 onChange={handleChange}
                 className="inputStyle flex-1"
               />
@@ -915,32 +594,48 @@ Register
 
             </div>
 
-            
+
             {/* Password */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 relative">
               <label className="w-32 text-sm font-medium text-gray-600">
                 Password
               </label>
 
+              {/* <div className="relative flex-1"> */}
+
+
               <input
                 name="password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 placeholder="Password"
                 onChange={handleChange}
+                autoComplete="new-password"
                 className="inputStyle flex-1"
               />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+              >
+                {showPassword ? <Eye size={18} /> : <EyeOff size={18} />}
+              </button>
+
+
+
+              {/* </div> */}
             </div>
 
           </div>
 
           <div className="flex justify-center md:col-span-2">
-          <button
-            type="submit"
-           className="rounded-xl bg-indigo-600 px-10 py-3 font-medium text-white transition hover:bg-indigo-700 hover:scale-[1.02]"
+            <button
+              type="submit"
+              className="rounded-xl bg-indigo-600 px-10 py-3 font-medium text-white transition hover:bg-indigo-700 hover:scale-[1.02]"
             // className="w-full rounded-xl bg-indigo-600 py-3 font-medium text-white transition hover:bg-indigo-700"
-          >
-            Register
-          </button>
+            >
+              Register
+            </button>
           </div>
 
 

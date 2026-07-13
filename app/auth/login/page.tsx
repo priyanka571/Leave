@@ -13,7 +13,7 @@ export default function LoginPage() {
   const router = useRouter();
 
 
-  const [firstName, setFirstName] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
 
@@ -32,7 +32,8 @@ export default function LoginPage() {
       const res = await api.post(
         "/auth/login",
         {
-          firstName,
+          email: username,
+           firstName: username,
           password
         },
         {
@@ -135,7 +136,7 @@ export default function LoginPage() {
           <div>
 
             <label className="mb-2 block text-sm font-medium text-gray-700">
-              First Name
+              User Name
             </label>
 
 
@@ -146,9 +147,9 @@ export default function LoginPage() {
 
               <input
                 type="text"
-                placeholder="Enter your first name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="Enter your email or first name"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="w-full rounded-xl border border-gray-200 bg-gray-50 py-3 pl-10 pr-4 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
               />
 

@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const {
-       employeeId,
+      employeeId,
       firstName,
       lastName,
       email,
@@ -86,8 +86,8 @@ export async function POST(req: NextRequest) {
       employeeId,
       firstName,
       lastName,
-      //  email: email.toLowerCase().trim(),
-      email,
+      // email,
+       email: email.toLowerCase().trim(),
       phone,
       department,
       password,
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
       profileImage,
       role: role || "employee",
        status,
-      remainingLeaves
+      // remainingLeaves
     });
 
 
