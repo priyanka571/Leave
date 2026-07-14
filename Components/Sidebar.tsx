@@ -26,7 +26,7 @@ const navItems = [
     { label: "Dashboard", icon: LayoutDashboard, route: "/dashboard", roles: ["admin", "employee"] },
     { label: "Employee", icon: Users, route: "/employee", roles: ["admin"] },
     { label: "Profile", icon: User, route: (user: any) => `/employee/${user._id}`, roles: ["admin", "employee"] },
-    { label: "Calendar", icon: Calendar, route: "/calendar", roles: ["admin", "employee"], public: true, },
+    { label: "Holidays", icon: Calendar, route: "/holidays", roles: ["admin", "employee"], public: true, },
     { label: "Department", icon: Building2, route: "/department", roles: ["admin"], public: true, },
     { label: "Attendance", icon: ClipboardCheck, route: "/attendance", roles: ["admin"] },
     { label: "Notifications", icon: Bell, route: "/notifications", roles: ["admin"], public: true, },
