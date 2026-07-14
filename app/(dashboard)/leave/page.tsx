@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
+import { Preahvihear } from "next/font/google";
 
 export default function ApplyLeavePage() {
 
@@ -10,6 +11,7 @@ export default function ApplyLeavePage() {
     leaveType: "",
     fromDate: "",
     toDate: "",
+    duration: "Full Day",
     days: "",
     reason: "",
     attachment: "",
@@ -18,7 +20,22 @@ export default function ApplyLeavePage() {
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  
+ 
+  
+ 
   const router = useRouter();
+
+  useEffect(() => {
+    if (formData.duration === "Half Day") {
+      setFormData((prev)=>({
+        ...prev,
+        days: "0.5",
+        toDate: prev.fromDate,
+      }))
+      
+    }
+  }, [formData.duration, formData.fromDate]);
 
 
 
@@ -69,6 +86,7 @@ export default function ApplyLeavePage() {
         fromDate: "",
         toDate: "",
         days: "",
+        duration: "Full Day",
         reason: "",
         attachment: "",
       });
@@ -269,6 +287,42 @@ export default function ApplyLeavePage() {
 
           </div>
 
+          <div>
+
+            <label className="mb-2 block text-sm font-semibold text-gray-700">
+              Duration
+            </label>
+
+
+            <select
+
+              name="duration"
+
+              value={formData.duration}
+
+              onChange={handleChange}
+
+              className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-indigo-500"
+
+              required
+
+            >
+
+
+              <option value="Full Day">Full Day</option>
+              <option value="Half Day">Half Day</option>
+
+
+            </select>
+
+          </div>
+
+
+
+
+
+
+
 
 
 
@@ -290,6 +344,7 @@ export default function ApplyLeavePage() {
               value={formData.days}
 
               onChange={handleChange}
+               disabled={formData.duration === "Half Day"}
 
               placeholder="Enter total leave days"
 

@@ -53,6 +53,8 @@ export async function POST(req: NextRequest) {
       fromDate,
       toDate,
       days,
+      duration,
+      halfDayType,
       reason,
       attachment
     } = body;
@@ -63,26 +65,59 @@ export async function POST(req: NextRequest) {
       !leaveType ||
       !fromDate ||
       !toDate ||
-      !days ||
       !reason
     ) {
 
       return NextResponse.json(
         {
-          message:"All fields are required"
+          message: "All fields are required"
         },
         {
-          status:400
+          status: 400
         }
       );
 
+    }
+
+    const leaveDuration = duration || "Full Day";
+
+    if (leaveDuration === "Half Day") {
+      if (Number(days) !== 0.5) {
+        return NextResponse.json(
+          {
+            message: "Half Day leave must have 0.5 day."
+          },
+          { status: 400 }
+        );
+      }
+
+      if (
+        new Date(fromDate).toDateString() !==
+        new Date(toDate).toDateString()
+      ) {
+        return NextResponse.json(
+          {
+            message: "Half Day leave must be for a single date."
+          },
+          { status: 400 }
+        );
+      }
+    } else {
+      if (Number(days) < 1) {
+        return NextResponse.json(
+          {
+            message: "Full Day leave must be at least 1 day."
+          },
+          { status: 400 }
+        );
+      }
     }
 
 
 
     const leave = await Leave.create({
 
-      employee:user._id,
+      employee: user._id,
 
       leaveType,
 
@@ -91,12 +126,14 @@ export async function POST(req: NextRequest) {
       toDate,
 
       days,
+      duration: leaveDuration,
+      halfDayType: leaveDuration === "Half Day" ? halfDayType : null,
 
       reason,
 
       attachment: attachment || "",
 
-      status:"Pending"
+      status: "Pending"
 
     });
 
@@ -104,28 +141,28 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        success:true,
-        message:"Leave applied successfully",
+        success: true,
+        message: "Leave applied successfully",
         leave
       },
       {
-        status:201
+        status: 201
       }
     );
 
 
 
-  } catch(error:unknown){
+  } catch (error: unknown) {
 
     return NextResponse.json(
       {
         message:
-        error instanceof Error
-        ? error.message
-        :"Internal Server Error"
+          error instanceof Error
+            ? error.message
+            : "Internal Server Error"
       },
       {
-        status:500
+        status: 500
       }
     );
 
@@ -151,14 +188,14 @@ export async function GET() {
 
 
 
-    if(!user){
+    if (!user) {
 
       return NextResponse.json(
         {
-          message:"Unauthorized"
+          message: "Unauthorized"
         },
         {
-          status:401
+          status: 401
         }
       );
 
@@ -171,20 +208,20 @@ export async function GET() {
 
 
     // Admin -> All employee leaves
-    if(user.role === "admin"){
+    if (user.role === "admin") {
 
       leaves = await Leave.find()
-      .populate(
-        "employee",
-        "firstName lastName email department designation"
-      )
-      .populate(
-        "approvedBy",
-        "firstName lastName"
-      )
-      .sort({
-        createdAt:-1
-      });
+        .populate(
+          "employee",
+          "firstName lastName email department designation"
+        )
+        .populate(
+          "approvedBy",
+          "firstName lastName"
+        )
+        .sort({
+          createdAt: -1
+        });
 
 
     }
@@ -194,15 +231,15 @@ export async function GET() {
 
 
       leaves = await Leave.find({
-        employee:user._id
+        employee: user._id
       })
-      .populate(
-        "employee",
-        "firstName lastName email"
-      )
-      .sort({
-        createdAt:-1
-      });
+        .populate(
+          "employee",
+          "firstName lastName email"
+        )
+        .sort({
+          createdAt: -1
+        });
 
 
     }
@@ -211,28 +248,28 @@ export async function GET() {
 
     return NextResponse.json(
       {
-        success:true,
-        count:leaves.length,
+        success: true,
+        count: leaves.length,
         leaves
       },
       {
-        status:200
+        status: 200
       }
     );
 
 
 
-  } catch(error:unknown){
+  } catch (error: unknown) {
 
     return NextResponse.json(
       {
         message:
-        error instanceof Error
-        ? error.message
-        :"Internal Server Error"
+          error instanceof Error
+            ? error.message
+            : "Internal Server Error"
       },
       {
-        status:500
+        status: 500
       }
     );
 
