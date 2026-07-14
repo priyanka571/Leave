@@ -23,13 +23,14 @@ const navItems = [
     { label: "Leave", icon: Users, route: "/leave-request", roles: ["admin"] },
     { label: "Leave Apply", icon: Users, route: "/leave", roles: ["employee"] },
     { label: "My Leave", icon: Users, route: "/leave/my", roles: ["employee"] },
-    { label: "Dashboard", icon: LayoutDashboard, route: "/dashboard", roles: ["admin", "employee"] },
+    // { label: "Dashboard", icon: LayoutDashboard, route: "/dashboard", roles: ["admin", "employee"] },
     { label: "Employee", icon: Users, route: "/employee", roles: ["admin"] },
     { label: "Profile", icon: User, route: (user: any) => `/employee/${user._id}`, roles: ["admin", "employee"] },
     { label: "Holidays", icon: Calendar, route: "/holidays", roles: ["admin", "employee"], public: true, },
     { label: "Department", icon: Building2, route: "/department", roles: ["admin"], public: true, },
     { label: "Attendance", icon: ClipboardCheck, route: "/attendance", roles: ["admin"] },
-    { label: "Notifications", icon: Bell, route: "/notifications", roles: ["admin"], public: true, },
+    { label: "Notifications", icon: Bell, route: "/notifications", roles: ["admin","employee"], public: true, },
+     { label: "Create-Message", icon: Bell, route: "/notice", roles: ["admin"] },
 ];
 
 
