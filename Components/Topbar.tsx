@@ -9,42 +9,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import api from "@/utils/axios";
 
-
-export default function Topbar() {
-
-    const [user, setUser] = useState<any>(null);
-
-
-    useEffect(() => {
+interface TopbarProps {
+  user: any;
+}
 
 
-        const getUser = async () => {
-
-            try {
-
-                const res = await api.get(
-                    "/user/me"
-                );
-
-
-                setUser(res.data.user);
-
-
-            }
-            catch (error) {
-
-                setUser(null);
-
-            }
-
-        };
-
-
-        getUser();
-
-
-    }, []);
-
+export default function Topbar({ user }: TopbarProps) {
 
 
     return (
