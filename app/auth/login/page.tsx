@@ -4,7 +4,6 @@ import { useState } from "react";
 import api from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { Lock, User } from "lucide-react";
-import Link from "next/link";
 
 
 
@@ -15,10 +14,41 @@ export default function LoginPage() {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
 
 
   const [error, setError] = useState("");
 
+  const handleForgotPassword = async () => {
+    setError("");
+
+    if (!username) {
+      router.push("/auth/forget-password");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(username)) {
+      setError("Please enter a valid email.");
+      return;
+    }
+
+    try {
+      const res = await api.post("/auth/forget-password", {
+        email: username,
+      });
+
+      router.push(
+        `/auth/reset-password?token=${res.data.resetToken}`
+      );
+    } catch (error: any) {
+      setError(
+        error.response?.data?.message ||
+        "Something went wrong"
+      );
+    }
+  };
 
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -33,7 +63,7 @@ export default function LoginPage() {
         "/auth/login",
         {
           email: username,
-           firstName: username,
+          firstName: username,
           password
         },
         {
@@ -194,6 +224,16 @@ export default function LoginPage() {
             // className="w-full rounded-xl bg-indigo-600 py-3 font-medium text-white transition hover:bg-indigo-700 hover:scale-[1.02]"
             >
               Login
+            </button>
+          </div>
+          <div className="mt-4 flex justify-center md:col-span-2">
+            <button
+              type="button"
+              onClick={handleForgotPassword}
+              disabled={forgotLoading}
+              className="text-sm font-medium text-indigo-600 hover:text-indigo-800 hover:underline disabled:opacity-50"
+            >
+              {forgotLoading ? "Sending..." : "Forgot Password?"}
             </button>
           </div>
 

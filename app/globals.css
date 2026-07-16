@@ -30,3 +30,146 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.fc {
+                    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                    --fc-border-color: #f1f5f9;
+                    --fc-daygrid-event-dot-width: 8px;
+                }
+                .fc .fc-toolbar {
+                    margin-bottom: 2rem;
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 1rem;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                .fc .fc-toolbar-title {
+                    font-size: 1.625rem !important;
+                    font-weight: 800;
+                    color: #0f172a;
+                    letter-spacing: -0.025em;
+                }
+                .fc .fc-button-primary {
+                    background-color: #ffffff !important;
+                    border: 1px solid #e2e8f0 !important;
+                    color: #475569 !important;
+                    font-weight: 600;
+                    font-size: 0.875rem;
+                    padding: 0.5rem 1rem !important;
+                    border-radius: 0.75rem !important;
+                    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+                    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+                    text-transform: capitalize !important;
+                }
+                .fc .fc-button-primary:hover {
+                    background-color: #f8fafc !important;
+                    border-color: #cbd5e1 !important;
+                    color: #0f172a !important;
+                }
+                .fc .fc-button-primary:not(:disabled).fc-button-active, 
+                .fc .fc-button-primary:not(:disabled):active {
+                    background-color: #f1f5f9 !important;
+                    border-color: #94a3b8 !important;
+                    color: #0f172a !important;
+                    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06) !important;
+                }
+                .fc .fc-col-header-cell {
+                    background-color: #f8fafc;
+                    padding: 0.875rem 0 !important;
+                    font-weight: 700;
+                    font-size: 0.75rem;
+                    text-transform: uppercase;
+                    letter-spacing: 0.075em;
+                    color: #64748b;
+                    border-bottom: 2px solid #e2e8f0;
+                }
+                .fc .fc-daygrid-day {
+                    transition: background-color 0.2s ease;
+                }
+                .fc .fc-daygrid-day:hover {
+                    background-color: #f8fafc;
+                }
+                .fc .fc-daygrid-day-top {
+                    padding: 8px;
+                    justify-content: flex-start;
+                }
+                .fc .fc-daygrid-day-number {
+                    padding: 0 !important;
+                    width: 2rem;
+                    height: 2rem;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    border-radius: 9999px;
+                    font-size: 0.875rem;
+                    font-weight: 500;
+                    color: #64748b;
+                }
+                /* Custom Holiday cell styling classes based on Schema enum types */
+                .government-holiday-cell {
+                    background-color: #fff1f2 !important;
+                    cursor: pointer;
+                }
+                .government-holiday-cell:hover {
+                    background-color: #ffe4e6 !important;
+                }
+                .government-holiday-cell .fc-daygrid-day-number {
+                    background-color: #f43f5e;
+                    color: #ffffff !important;
+                    font-weight: 700;
+                    box-shadow: 0 4px 6px -1px rgba(244, 63, 94, 0.2);
+                }
+                .festival-holiday-cell {
+                    background-color: #f0fdf4 !important;
+                    cursor: pointer;
+                }
+                .festival-holiday-cell:hover {
+                    background-color: #dcfce7 !important;
+                }
+                .festival-holiday-cell .fc-daygrid-day-number {
+                    background-color: #10b981;
+                    color: #ffffff !important;
+                    font-weight: 700;
+                    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.2);
+                }
+                .office-holiday-cell {
+                    background-color: #eef2ff !important;
+                    cursor: pointer;
+                }
+                .office-holiday-cell:hover {
+                    background-color: #e0e7ff !important;
+                }
+                .office-holiday-cell .fc-daygrid-day-number {
+                    background-color: #6366f1;
+                    color: #ffffff !important;
+                    font-weight: 700;
+                    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2);
+                }
+                .optional-holiday-cell {
+                    background-color: #fefce8 !important;
+                    cursor: pointer;
+                }
+                .optional-holiday-cell:hover {
+                    background-color: #fef9c3 !important;
+                }
+                .optional-holiday-cell .fc-daygrid-day-number {
+                    background-color: #f59e0b;
+                    color: #ffffff !important;
+                    font-weight: 700;
+                    box-shadow: 0 4px 6px -1px rgba(245, 158, 11, 0.2);
+                }
+                .inactive-holiday-cell {
+                    opacity: 0.65;
+                    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(226, 232, 240, 0.5) 10px, rgba(226, 232, 240, 0.5) 20px) !important;
+                }
+                .fc .fc-daygrid-event {
+                    margin-top: 4px !important;
+                    margin-bottom: 2px !important;
+                    margin-left: 4px !important;
+                    margin-right: 4px !important;
+                    border: none !important;
+                    box-shadow: none !important;
+                    background-color: transparent !important;
+                    padding: 0 !important;
+                }

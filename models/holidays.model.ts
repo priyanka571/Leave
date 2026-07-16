@@ -3,7 +3,7 @@ import { National_Park } from "next/font/google";
 
 const Holiday = new mongoose.Schema(
     {
-        tittle: {
+        title: {
             type: String,
             required: true,
             trim: true,
