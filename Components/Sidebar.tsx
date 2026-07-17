@@ -33,7 +33,7 @@ const navItems = [
     { label: "Holidays", icon: Calendar, route: "/holidays", roles: ["admin", "employee"], },
 
     { label: "Notifications", icon: Bell, route: "/notifications", roles: ["admin", "employee"], },
-    { label: "Create-Message", icon: Bell, route: "/notice", roles: ["admin"] },
+    // { label: "Create-Message", icon: Bell, route: "/notice", roles: ["admin"] },
 ];
 
 const otherItems = [

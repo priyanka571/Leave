@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/utils/db";
 import { getUserFromRequest } from "@/utils/auth";
 import Leave from "@/models/leaveRequest.model";
+import Holiday from "@/models/holidays.model"
 
 
 // =======================
@@ -42,6 +43,12 @@ export async function POST(req: NextRequest) {
       );
 
     }
+    function isWeekend(date: Date) {
+      const day = date.getDay();
+
+      return day === 0 || day === 6;
+    }
+
 
 
 
@@ -81,36 +88,108 @@ export async function POST(req: NextRequest) {
 
     const leaveDuration = duration || "Full Day";
 
-    if (leaveDuration === "Half Day") {
-      if (Number(days) !== 0.5) {
-        return NextResponse.json(
-          {
-            message: "Half Day leave must have 0.5 day."
-          },
-          { status: 400 }
-        );
+
+
+    let totalDays = 0;
+
+    const current = new Date(fromDate);
+    const end = new Date(toDate);
+
+    while (current <= end) {
+
+      const checkDate = new Date(current);
+
+      checkDate.setHours(0, 0, 0, 0);
+
+      const nextDate = new Date(checkDate);
+      nextDate.setDate(nextDate.getDate() + 1);
+
+      const holiday = await Holiday.findOne({
+        holidayDate: {
+          $gte: checkDate,
+          $lt: nextDate,
+        },
+      });
+
+      if (!isWeekend(current) && !holiday) {
+        totalDays++;
       }
 
-      if (
-        new Date(fromDate).toDateString() !==
-        new Date(toDate).toDateString()
-      ) {
-        return NextResponse.json(
-          {
-            message: "Half Day leave must be for a single date."
-          },
-          { status: 400 }
-        );
-      }
-    } else {
-      if (Number(days) < 1) {
-        return NextResponse.json(
-          {
-            message: "Full Day leave must be at least 1 day."
-          },
-          { status: 400 }
-        );
-      }
+      current.setDate(current.getDate() + 1);
+    }
+
+    if (leaveDuration === "Half Day") {
+      totalDays = 0.5;
+    }
+
+
+
+    if (leaveDuration === "Full Day" && totalDays === 0) {
+      return NextResponse.json(
+        {
+          message:
+            "The selected dates are weekends or holidays. Please choose working days."
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+    const existingLeave = await Leave.findOne({
+      employee: user._id,
+      status: { $ne: "Rejected" }, // Rejected leave ko ignore karo
+      $or: [
+        {
+          fromDate: { $lte: new Date(toDate) },
+          toDate: { $gte: new Date(fromDate) },
+        },
+      ],
+    });
+
+    if (existingLeave) {
+      return NextResponse.json(
+        {
+          message:
+            "You have already applied for leave during the selected date(s).",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const startDate = new Date(fromDate);
+    const endDate = new Date(toDate);
+
+    const today = new Date();
+
+    // Sirf date compare karni hai, time nahi
+    today.setHours(0, 0, 0, 0);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+
+    // Past date check
+    if (startDate < today) {
+      return NextResponse.json(
+        {
+          message: "You cannot apply leave for past dates.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    // From Date > To Date check
+    if (startDate > endDate) {
+      return NextResponse.json(
+        {
+          message: "From Date cannot be later than To Date.",
+        },
+        {
+          status: 400,
+        }
+      );
     }
 
 
@@ -125,7 +204,7 @@ export async function POST(req: NextRequest) {
 
       toDate,
 
-      days,
+      days: totalDays,
       duration: leaveDuration,
       halfDayType: leaveDuration === "Half Day" ? halfDayType : null,
 

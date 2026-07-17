@@ -919,11 +919,11 @@ export default function RegisterPage() {
               </p>
             </div>
 
-            <div className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-2.5">
+            {/* <div className="rounded-2xl border border-indigo-100 bg-indigo-50 px-4 py-2.5">
               <span className="text-sm font-bold text-indigo-700">
                 New Employee
               </span>
-            </div>
+            </div> */}
 
           </div>
 
@@ -987,6 +987,7 @@ export default function RegisterPage() {
               {/* First Name */}
               <div >
                 <label className="mb-2 block text-sm font-semibold text-slate-700">
+                  First Name
                 </label>
 
                 <input
@@ -1252,11 +1253,11 @@ export default function RegisterPage() {
 
               {/* Password */}
               <div className="relative">
-              <label className="w-32 text-sm font-medium text-gray-600">
+              <label className="mb-2 block text-sm font-semibold text-slate-700">
                   Password
                 </label>
 
-                {/* <div className="relative flex-1"> */}
+                <div className="relative flex-1">
 
 
                 <input
@@ -1278,7 +1279,7 @@ export default function RegisterPage() {
 
 
 
-                {/* </div> */}
+                </div>
               </div>
 
             </div>

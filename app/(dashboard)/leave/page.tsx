@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/utils/axios";
-import {CalendarDays} from "lucide-react";
+import { CalendarDays } from "lucide-react";
 // import { Preahvihear } from "next/font/google";
 
 export default function ApplyLeavePage() {
@@ -27,16 +27,51 @@ export default function ApplyLeavePage() {
 
   const router = useRouter();
 
+  // useEffect(() => {
+  //   if (formData.duration === "Half Day") {
+  //     setFormData((prev) => ({
+  //       ...prev,
+  //       days: "0.5",
+  //       toDate: prev.fromDate,
+  //     }))
+
+  //   }
+  // }, [formData.duration, formData.fromDate]);
+  const calculateWorkingDays = (from: string, to: string) => {
+    if (!from || !to) return "0";
+
+    let count = 0;
+    const current = new Date(from);
+    const end = new Date(to);
+
+    while (current <= end) {
+      const day = current.getDay();
+
+      if (day !== 0 && day !== 6) {
+        count++;
+      }
+
+      current.setDate(current.getDate() + 1);
+    }
+
+    return count.toString();
+  };
+
   useEffect(() => {
     if (formData.duration === "Half Day") {
       setFormData((prev) => ({
         ...prev,
         days: "0.5",
         toDate: prev.fromDate,
-      }))
-
+      }));
+      return;
     }
-  }, [formData.duration, formData.fromDate]);
+
+    setFormData((prev) => ({
+      ...prev,
+      days: calculateWorkingDays(prev.fromDate, prev.toDate),
+    }));
+  }, [formData.fromDate, formData.toDate, formData.duration]);
 
 
 
@@ -68,13 +103,23 @@ export default function ApplyLeavePage() {
       setLoading(true);
       setMessage("");
 
-      const res = await api.post(
-        "/leaves",
-        {
-          ...formData,
-          days: Number(formData.days)
-        }
-      );
+      // const res = await api.post(
+      //   "/leaves",
+      //   {
+      //     ...formData,
+      //     days: Number(formData.days)
+      //   }
+      // );
+
+
+      const res = await api.post("/leaves", {
+        leaveType: formData.leaveType,
+        fromDate: formData.fromDate,
+        toDate: formData.toDate,
+        duration: formData.duration,
+        reason: formData.reason,
+        attachment: formData.attachment,
+      });
 
 
       setMessage(
@@ -150,7 +195,7 @@ export default function ApplyLeavePage() {
 
           {
             message &&
-           <div className="mb-6 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm font-semibold text-indigo-700">
+            <div className="mb-6 rounded-2xl border border-indigo-100 bg-indigo-50 p-4 text-sm font-semibold text-indigo-700">
               {message}
             </div>
           }
@@ -250,6 +295,7 @@ export default function ApplyLeavePage() {
                   name="fromDate"
 
                   value={formData.fromDate}
+                  min={new Date().toISOString().split("T")[0]}
 
                   onChange={handleChange}
 
@@ -279,6 +325,7 @@ export default function ApplyLeavePage() {
                   name="toDate"
 
                   value={formData.toDate}
+                  min={formData.fromDate || new Date().toISOString().split("T")[0]}
 
                   onChange={handleChange}
 
@@ -340,7 +387,7 @@ export default function ApplyLeavePage() {
               </label>
 
 
-              <input
+              {/* <input
 
                 type="number"
 
@@ -356,7 +403,10 @@ export default function ApplyLeavePage() {
                 className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 placeholder:text-slate-400 transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
                 required
 
-              />
+              /> */}
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-semibold text-slate-800">
+                {formData.days || 0} Day(s)
+              </div>
 
             </div>
 
@@ -384,7 +434,7 @@ export default function ApplyLeavePage() {
 
                 placeholder="Enter leave reason"
 
-               className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 placeholder:text-slate-400 transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-800 placeholder:text-slate-400 transition-all focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
 
                 required
 

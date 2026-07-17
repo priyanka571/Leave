@@ -21,9 +21,9 @@ const NotificationSchema = new mongoose.Schema(
         type:String,
         enum:[
             "announcement",
-            "leave",
+            "event",
             "holiday",
-            "urgent"
+            "alert"
         ],
         default:"announcement"
     },

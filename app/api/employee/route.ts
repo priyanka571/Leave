@@ -36,7 +36,8 @@ export async function GET() {
     // Fetch all employees
     const employees = await User.find({
       role: "employee",
-    }).select("-password -refreshToken");
+    }).select("-password -refreshToken")
+      
 
     return NextResponse.json(
       {
